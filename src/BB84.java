@@ -5,27 +5,40 @@ public class BB84 {
 	public static void main(String[] args) {
 		Random rand = new Random();
 		
-		BraKetVector[] Alice_qbit = new BraKetVector[4];
-		int[] Alice_bit = new int[Alice_qbit.length];
+		int bitLength = 4;
 		
-		for(int i=0; i<Alice_qbit.length; i++) {
-			int tmp = rand.nextInt(16)%4;
-			Alice_qbit[i] = new BraKetVector(tmp); 
-			Alice_bit[i] = tmp%2;
-		}
 		
+		//Alice
+		int tmp = rand.nextInt(16)%4;
+		BraKetVector Alice_qbit = new BraKetVector(tmp); 
+		int Alice_bit = tmp%2;
+		int Alice_measurement = 0;
+		if(tmp < 2) Alice_measurement = 0;
+		else Alice_measurement = 1;
 		
 		//Show Alice data
-		for(int i=0; i<Alice_qbit.length; i++) {
-			Alice_qbit[i].Show();
-			System.out.println(Alice_bit[i]);
-		}
+		System.out.println("Show Alice data");
+		Alice_qbit.Show();
+		System.out.println(Alice_bit);
+		System.out.println();
 		
 		
+		/*
+		 * data sending
+		 * 
+		 */
 		
 		
+		//Bob
+		int bob_measurement = rand.nextInt(2);
+		BraKetVector Bob_qbit = Alice_qbit.Measurement(bob_measurement);
 		
+		//Show Bob data
+		System.out.println("Show Bob data");
+		Bob_qbit.Show();
+		System.out.println();
 		
+		System.out.println(Alice_measurement == bob_measurement);
 		
 	}
 
