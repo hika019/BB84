@@ -4,9 +4,6 @@ public class BraKetVector{
 	int size;
 	boolean bra;
 	
-	public BraKetVector(double[] vec) {
-		SetData(vec);
-	};
 	
 	public BraKetVector() {
 		double[] vec = new double[2];
@@ -40,6 +37,10 @@ public class BraKetVector{
 		
 	};
 	
+	public BraKetVector(double[] vec) {
+		SetData(vec);
+	};
+	
 	
 	private void SetData(BraKetVector a) {
 		SetData(a.vector, a.bra);
@@ -55,16 +56,22 @@ public class BraKetVector{
 		this.bra = bra;
 	}
 	
-	
 	public void Show() {
 		System.out.print(this.size + ": ");
 		for(int i=0; i<this.size; i++) {
 			System.out.print(this.vector[i] + ", ");
 		}
-		System.out.print("\n");
+		System.out.print(this.bra+"\n");
 	}
 	
+	//転置
+	public BraKetVector T() {
+		BraKetVector a = new BraKetVector(this.vector);
+		a.bra = !this.bra;
+		return a;
+	}
 	
+	//テンソル積
 	public void TensorProduct(BraKetVector a, BraKetVector b) {
 		
 		double[] ans = new double[a.size*b.size];
@@ -124,6 +131,28 @@ public class BraKetVector{
 		for(int i=0; i<b.size; i++) {
 			ans[i] = a * b.vector[i];
 		}
-		this.SetData(ans);
+		this.SetData(ans, b.bra);
 	}
+	
+	public double Dot(BraKetVector b) {
+		
+		
+		if(!(this.bra == false && b.bra == true)) {
+			System.out.print("ベクトル方向が違う: ");
+			System.out.print("a="+this.bra + "b="+b.bra);
+			return 0;
+		}
+		if(this.size != b.size) {
+			System.out.println("Different size of Kets");
+			return 0;
+		}
+		
+		double ans = 0;
+		for(int i=0; i<this.size; i++) {
+			ans += this.vector[i]*b.vector[i];
+		}
+		
+		return ans;
+	}
+
 };
