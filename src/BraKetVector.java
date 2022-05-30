@@ -206,5 +206,10 @@ public class BraKetVector{
 		
 		return new BraKetVector();
 	}
+	
+	public BraKetVector Measurement(int a) {
+		if(a%2 == 0) return Measurement("01");
+		else return Measurement("+-");
+	}
 
 };
