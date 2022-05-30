@@ -1,3 +1,4 @@
+import java.util.Random;
 
 public class BraKetVector{
 	double[] vector;
@@ -12,6 +13,30 @@ public class BraKetVector{
 		SetData(vec);
 	}
 	
+	public BraKetVector(char c) {
+		if(c == '0') {
+			double[] vec = new double[2];
+			vec[0] = 1;
+			vec[1] = 0;
+			SetData(vec);
+		}else if(c == '1') {
+			double[] vec = new double[2];
+			vec[0] = 0;
+			vec[1] = 1;
+			SetData(vec);
+		}else if(c == '+') {
+			BraKetVector a = new BraKetVector();
+			a.Add(new BraKetVector(0), new BraKetVector(1));
+			a.Mul(1/Math.sqrt(2), a);
+			SetData(a);
+		}else if(c == '-') {
+			BraKetVector a = new BraKetVector();
+			a.Sub(new BraKetVector(0), new BraKetVector(1));
+			a.Mul(1/Math.sqrt(2), a);
+			SetData(a);
+		}
+	}
+	
 	public BraKetVector(int v) {
 		if(v == 0) {
 			double[] vec = new double[2];
@@ -23,12 +48,12 @@ public class BraKetVector{
 			vec[0] = 0;
 			vec[1] = 1;
 			SetData(vec);
-		}else if(v == 3) {
+		}else if(v == 2) {
 			BraKetVector a = new BraKetVector();
 			a.Add(new BraKetVector(0), new BraKetVector(1));
 			a.Mul(1/Math.sqrt(2), a);
 			SetData(a);
-		}else if(v == 4) {
+		}else if(v == 3) {
 			BraKetVector a = new BraKetVector();
 			a.Sub(new BraKetVector(0), new BraKetVector(1));
 			a.Mul(1/Math.sqrt(2), a);
@@ -75,7 +100,6 @@ public class BraKetVector{
 	public void TensorProduct(BraKetVector a, BraKetVector b) {
 		
 		double[] ans = new double[a.size*b.size];
-		System.out.println(ans.length);
 		
 		for(int i=0; i<a.size; i++) {
 			for(int j=0; j<b.size; j++) {
@@ -153,6 +177,36 @@ public class BraKetVector{
 		}
 		
 		return ans;
+	}
+	
+	
+	
+	public BraKetVector Measurement(String group) {
+		
+		if(group == "01") {
+			BraKetVector a = new BraKetVector('0');
+			Random r = new Random();
+			
+			System.out.println((int)(10000*(Math.pow(a.T().Dot(this), 2)+0.0000000000000001)));
+			
+			if (r.nextInt(10000) < (int)(10000*(Math.pow(a.T().Dot(this), 2)+0.0000000000000001))) {
+				return new BraKetVector('0');
+			}else {
+				return new BraKetVector('1');
+			}
+			
+		}else if(group == "+-") {
+			BraKetVector a = new BraKetVector('+');
+			Random r = new Random();
+			
+			if (r.nextInt(10000) < (int)(10000*(Math.pow(a.T().Dot(this), 2)+0.0000000000000001))) {
+				return new BraKetVector('0');
+			}else {
+				return new BraKetVector('1');
+			}
+		}
+		
+		return new BraKetVector();
 	}
 
 };
