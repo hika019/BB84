@@ -187,8 +187,6 @@ public class BraKetVector{
 			BraKetVector a = new BraKetVector('0');
 			Random r = new Random();
 			
-			System.out.println((int)(10000*(Math.pow(a.T().Dot(this), 2)+0.0000000000000001)));
-			
 			if (r.nextInt(10000) < (int)(10000*(Math.pow(a.T().Dot(this), 2)+0.0000000000000001))) {
 				return new BraKetVector('0');
 			}else {
@@ -200,9 +198,9 @@ public class BraKetVector{
 			Random r = new Random();
 			
 			if (r.nextInt(10000) < (int)(10000*(Math.pow(a.T().Dot(this), 2)+0.0000000000000001))) {
-				return new BraKetVector('0');
+				return new BraKetVector('+');
 			}else {
-				return new BraKetVector('1');
+				return new BraKetVector('-');
 			}
 		}
 		
