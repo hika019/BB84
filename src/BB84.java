@@ -10,12 +10,15 @@ public class BB84 {
 		Random rand = new Random();
 		
 		int bitLen = 4;
-		
-		int[] aliceBits = new int[bitLen];
-		int[] bobBits = new int[bitLen];
+		int secure = 20;
 		
 		
-		for(int i=0; i<bitLen;) {
+		int[] aliceBits = new int[bitLen+secure];
+		int[] bobBits = new int[bitLen+secure];
+		
+		
+		//送信
+		for(int i=0; i<bitLen+secure;) {
 			//Alice
 			int aliceMeasurement = rand.nextInt(2);
 			aliceBits[i] = rand.nextInt(2);
@@ -28,7 +31,7 @@ public class BB84 {
 			
 			
 			//Send
-			BraKetVector getData = network(aliceQbit, false);
+			BraKetVector getData = network(aliceQbit, true);
 			
 			
 			//Bob
@@ -47,16 +50,27 @@ public class BB84 {
 			}
 		}
 		System.out.println("End BB84");
+		System.out.println();
 		
+		//盗聴確認
+		int start = rand.nextInt(bitLen);
+		boolean wiretap = false;
 		
-		System.out.print("Alice: ");
-		for(int i=0; i<bitLen; i++) {
+		for(int i=start; i<start+secure; i++) {
+			wiretap = wiretap || (aliceBits[i]!=bobBits[i]);
+		}
+		
+		//print
+		
+		System.out.println("wiretap: "+wiretap);
+		System.out.print("Alice:\n");
+		for(int i=0; i<bitLen+secure; i++) {
 			System.out.print(aliceBits[i]+ ",");
 		}
 		System.out.println();
 		
-		System.out.print("Bob: ");
-		for(int i=0; i<bitLen; i++) {
+		System.out.print("Bob:\n");
+		for(int i=0; i<bitLen+secure; i++) {
 			System.out.print(bobBits[i]+ ",");
 		}
 		System.out.println();
