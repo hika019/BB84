@@ -9,35 +9,60 @@ public class BB84 {
 	public static void main(String[] args) {
 		Random rand = new Random();
 		
+		int bitLen = 4;
+		
+		int[] aliceBits = new int[bitLen];
+		int[] bobBits = new int[bitLen];
 		
 		
+		for(int i=0; i<bitLen;) {
+			//Alice
+			int aliceMeasurement = rand.nextInt(2);
+			aliceBits[i] = rand.nextInt(2);
+			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement); 
+			
+			//Show Alice data
+			System.out.println("Show Alice data");
+			aliceQbit.show();
+			System.out.println();
+			
+			
+			//Send
+			BraKetVector getData = network(aliceQbit, false);
+			
+			
+			//Bob
+			int bobMeasurement = rand.nextInt(2);
+			BraKetVector bobQbit = getData.measurement(bobMeasurement);
+			bobBits[i] = bobQbit.toBit();
+			
+			//Show Bob data
+			System.out.println("Show Bob data");
+			bobQbit.show();
+			System.out.println();
+
+			
+			if(aliceMeasurement == bobMeasurement) {
+				i++;
+			}
+		}
+		System.out.println("End BB84");
 		
 		
-		//Alice
-		int aliceMeasurement = rand.nextInt(2);
-		int aliceBit = rand.nextInt(2);
-		BraKetVector aliceQbit = new BraKetVector(aliceBit, aliceMeasurement); 
+		System.out.print("Alice: ");
+		for(int i=0; i<bitLen; i++) {
+			System.out.print(aliceBits[i]+ ",");
+		}
+		System.out.println();
 		
-		//Show Alice data
-		System.out.println("Show Alice data");
-		aliceQbit.show();
+		System.out.print("Bob: ");
+		for(int i=0; i<bitLen; i++) {
+			System.out.print(bobBits[i]+ ",");
+		}
 		System.out.println();
 		
 		
-		//Send
-		BraKetVector getData = network(aliceQbit, false);
 		
-		
-		//Bob
-		int bobMeasurement = rand.nextInt(2);
-		BraKetVector bobQbit = getData.measurement(bobMeasurement);
-		
-		//Show Bob data
-		System.out.println("Show Bob data");
-		bobQbit.show();
-		System.out.println();
-		
-		System.out.println(aliceMeasurement == bobMeasurement);
 		
 	}
 	
