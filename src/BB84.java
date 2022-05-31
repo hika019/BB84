@@ -9,8 +9,8 @@ public class BB84 {
 	public static void main(String[] args) {
 		Random rand = new Random();
 		
-		int bitLen = 4;
-		int secure = 20;
+		int bitLen = 128; //n
+		int secure = 64; //m
 		
 		
 		int[] aliceBits = new int[bitLen+secure];
