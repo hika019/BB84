@@ -7,37 +7,35 @@ public class BraKetVector{
 	
 	
 	public BraKetVector() {
-		double[] vec = new double[2];
-		vec[0] = 1;
-		vec[1] = 0;
-		SetData(vec);
+		CreateVector(0);
+	}
+	
+	public BraKetVector(int bit, int kei) {
+		CreateVector(kei*2+bit);
 	}
 	
 	public BraKetVector(char c) {
 		if(c == '0') {
-			double[] vec = new double[2];
-			vec[0] = 1;
-			vec[1] = 0;
-			SetData(vec);
+			CreateVector(0);
 		}else if(c == '1') {
-			double[] vec = new double[2];
-			vec[0] = 0;
-			vec[1] = 1;
-			SetData(vec);
+			CreateVector(1);
 		}else if(c == '+') {
-			BraKetVector a = new BraKetVector();
-			a.Add(new BraKetVector(0), new BraKetVector(1));
-			a.Mul(1/Math.sqrt(2), a);
-			SetData(a);
+			CreateVector(2);
 		}else if(c == '-') {
-			BraKetVector a = new BraKetVector();
-			a.Sub(new BraKetVector(0), new BraKetVector(1));
-			a.Mul(1/Math.sqrt(2), a);
-			SetData(a);
+			CreateVector(3);
 		}
 	}
 	
 	public BraKetVector(int v) {
+		CreateVector(v);
+		
+	};
+	
+	public BraKetVector(double[] vec) {
+		SetData(vec);
+	};
+	
+	private void CreateVector(int v) {
 		if(v == 0) {
 			double[] vec = new double[2];
 			vec[0] = 1;
@@ -59,13 +57,7 @@ public class BraKetVector{
 			a.Mul(1/Math.sqrt(2), a);
 			SetData(a);
 		}
-		
-	};
-	
-	public BraKetVector(double[] vec) {
-		SetData(vec);
-	};
-	
+	}
 	
 	private void SetData(BraKetVector a) {
 		SetData(a.vector, a.bra);
@@ -82,11 +74,36 @@ public class BraKetVector{
 	}
 	
 	public void Show() {
-		System.out.print(this.size + ": ");
-		for(int i=0; i<this.size; i++) {
-			System.out.print(this.vector[i] + ", ");
+		this.Show(false);
+	}
+	
+	public void Show(boolean a) {
+		if(a) {
+			System.out.print(this.size + ": ");
+			for(int i=0; i<this.size; i++) {
+				System.out.print(this.vector[i] + ", ");
+			}
 		}
+		
+		if(this.Equal('0') || this.Equal('+')) System.out.print("bit: "+0+" ");
+		else if(this.Equal('1') || this.Equal('-')) System.out.print("bit: "+1+" ");
+		
+		
 		System.out.print(this.bra+"\n");
+	}
+	
+	public boolean Equal(char a) {
+		return this.Equal(new BraKetVector(a));
+	}
+	
+	public boolean Equal(BraKetVector a) {
+		if(this.size != a.size) return false;
+		if(this.bra != a.bra) return false;
+				
+		for(int i=0; i<this.size; i++) {
+			if(this.vector[i] != a.vector[i]) return false;
+		}
+		return true;
 	}
 	
 	//転置
