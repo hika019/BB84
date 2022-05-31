@@ -24,10 +24,12 @@ public class BB84 {
 			aliceBits[i] = rand.nextInt(2);
 			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement); 
 			
+			/*
 			//Show Alice data
 			System.out.println("Show Alice data");
 			aliceQbit.show();
 			System.out.println();
+			*/
 			
 			
 			//Send
@@ -38,12 +40,12 @@ public class BB84 {
 			int bobMeasurement = rand.nextInt(2);
 			BraKetVector bobQbit = getData.measurement(bobMeasurement);
 			bobBits[i] = bobQbit.toBit();
-			
+			/*
 			//Show Bob data
 			System.out.println("Show Bob data");
 			bobQbit.show();
 			System.out.println();
-
+			*/
 			
 			if(aliceMeasurement == bobMeasurement) {
 				i++;
@@ -95,9 +97,8 @@ public class BB84 {
 		if(info) {
 			System.out.println("Eve_measurement: "+eveMeasurement);
 			tmp.show(true);
+			System.out.println();
 		}
-		
-		System.out.println();
 		
 		return tmp;
 	}
