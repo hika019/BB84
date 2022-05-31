@@ -76,8 +76,6 @@ public class BB84 {
 		System.out.println();
 		
 		
-		
-		
 	}
 	
 	
