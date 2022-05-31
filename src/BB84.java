@@ -49,7 +49,7 @@ public class BB84 {
 				i++;
 			}
 		}
-		System.out.println("End BB84");
+		System.out.println("送信終了");
 		System.out.println();
 		
 		//盗聴確認
