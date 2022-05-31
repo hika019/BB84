@@ -197,6 +197,11 @@ public class BraKetVector{
 	}
 	
 	
+	public int toBit() {
+		if(this.isEqual('0') || this.isEqual('+')) return 0;
+		else return 1;
+	}
+	
 	
 	public BraKetVector measurement(String group) {
 		
