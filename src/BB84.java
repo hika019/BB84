@@ -9,41 +9,40 @@ public class BB84 {
 	public static void main(String[] args) {
 		Random rand = new Random();
 		
-		int bitLength = 4;
 		
 		
 		
 		
 		//Alice
-		int Alice_measurement = rand.nextInt(2);
-		int Alice_bit = rand.nextInt(2);
-		BraKetVector Alice_qbit = new BraKetVector(Alice_bit, Alice_measurement); 
+		int aliceMeasurement = rand.nextInt(2);
+		int aliceBit = rand.nextInt(2);
+		BraKetVector aliceQbit = new BraKetVector(aliceBit, aliceMeasurement); 
 		
 		//Show Alice data
 		System.out.println("Show Alice data");
-		Alice_qbit.Show();
+		aliceQbit.show();
 		System.out.println();
 		
 		
 		//Send
-		BraKetVector Data = Send(Alice_qbit, false);
+		BraKetVector getData = network(aliceQbit, false);
 		
 		
 		//Bob
-		int bob_measurement = rand.nextInt(2);
-		BraKetVector Bob_qbit = Data.Measurement(bob_measurement);
+		int bobMeasurement = rand.nextInt(2);
+		BraKetVector bobQbit = getData.measurement(bobMeasurement);
 		
 		//Show Bob data
 		System.out.println("Show Bob data");
-		Bob_qbit.Show();
+		bobQbit.show();
 		System.out.println();
 		
-		System.out.println(Alice_measurement == bob_measurement);
+		System.out.println(aliceMeasurement == bobMeasurement);
 		
 	}
 	
 	
-	public static BraKetVector Send(BraKetVector qbit, boolean wiretap, boolean info) {
+	public static BraKetVector network(BraKetVector qbit, boolean wiretap, boolean info) {
 		if(info) {
 			System.out.println("Send");
 			System.out.println("wiretap: "+wiretap);
@@ -53,12 +52,12 @@ public class BB84 {
 		
 		Random rand = new Random();
 		
-		int Eve_measurement = rand.nextInt(2);
-		BraKetVector tmp = qbit.Measurement(Eve_measurement);
+		int eveMeasurement = rand.nextInt(2);
+		BraKetVector tmp = qbit.measurement(eveMeasurement);
 		
 		if(info) {
-			System.out.println("Eve_measurement: "+Eve_measurement);
-			tmp.Show(true);
+			System.out.println("Eve_measurement: "+eveMeasurement);
+			tmp.show(true);
 		}
 		
 		System.out.println();
@@ -66,14 +65,8 @@ public class BB84 {
 		return tmp;
 	}
 	
-	public static BraKetVector Send(BraKetVector qbit, boolean wiretap) {
-		if(wiretap == false) return qbit;
-		
-		Random rand = new Random();
-		
-		int Eve_measurement = rand.nextInt(2);
-		
-		return qbit.Measurement(Eve_measurement);
+	public static BraKetVector network(BraKetVector qbit, boolean wiretap) {
+		return network(qbit, wiretap, false);
 	}
 
 }
