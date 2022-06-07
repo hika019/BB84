@@ -9,16 +9,16 @@ public class BB84 {
 	public static void main(String[] args) {
 		Random rand = new Random();
 		
-		int bitLen = 128; //n
-		int secure = 64; //m
+		int n = 128;
+		int m = 64;
 		
 		
-		int[] aliceBits = new int[bitLen+secure];
-		int[] bobBits = new int[bitLen+secure];
+		int[] aliceBits = new int[n+m];
+		int[] bobBits = new int[n+m];
 		
 		
 		//送信
-		for(int i=0; i<bitLen+secure;) {
+		for(int i=0; i<n+m;) {
 			//Alice
 			int aliceMeasurement = rand.nextInt(2);
 			aliceBits[i] = rand.nextInt(2);
@@ -55,10 +55,10 @@ public class BB84 {
 		System.out.println();
 		
 		//盗聴確認
-		int start = rand.nextInt(bitLen);
+		int start = rand.nextInt(n);
 		boolean wiretap = false;
 		
-		for(int i=start; i<start+secure; i++) {
+		for(int i=start; i<start+m; i++) {
 			wiretap = wiretap || (aliceBits[i]!=bobBits[i]);
 		}
 		
@@ -66,13 +66,13 @@ public class BB84 {
 		
 		System.out.println("wiretap: "+wiretap);
 		System.out.print("Alice:\n");
-		for(int i=0; i<bitLen+secure; i++) {
+		for(int i=0; i<n+m; i++) {
 			System.out.print(aliceBits[i]+ ",");
 		}
 		System.out.println();
 		
 		System.out.print("Bob:\n");
-		for(int i=0; i<bitLen+secure; i++) {
+		for(int i=0; i<n+m; i++) {
 			System.out.print(bobBits[i]+ ",");
 		}
 		System.out.println();
