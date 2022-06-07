@@ -81,18 +81,18 @@ public class BB84 {
 	}
 	
 	
-	public static BraKetVector network(BraKetVector qbit, boolean wiretap, boolean info) {
+	public static BraKetVector network(BraKetVector in, boolean wiretap, boolean info) {
 		if(info) {
 			System.out.println("Send");
 			System.out.println("wiretap: "+wiretap);
 		}
 		
-		if(wiretap == false) return qbit;
+		if(wiretap == false) return in;
 		
 		Random rand = new Random();
 		
 		int eveMeasurement = rand.nextInt(2);
-		BraKetVector tmp = qbit.measurement(eveMeasurement);
+		BraKetVector tmp = in.measurement(eveMeasurement);
 		
 		if(info) {
 			System.out.println("Eve_measurement: "+eveMeasurement);

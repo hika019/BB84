@@ -3,7 +3,7 @@ import java.util.Random;
 public class BraKetVector{
 	double[] vector;
 	int size;
-	boolean bra;
+	boolean ket;
 	
 	
 	public BraKetVector() {
@@ -60,17 +60,17 @@ public class BraKetVector{
 	}
 	
 	private void setData(BraKetVector a) {
-		setData(a.vector, a.bra);
+		setData(a.vector, a.ket);
 	}
 	
 	private void setData(double[] vector) {
 		setData(vector, true);
 	}
 	
-	private void setData(double[] vector, boolean bra) {
+	private void setData(double[] vector, boolean ket) {
 		this.vector = vector;
 		this.size = vector.length;
-		this.bra = bra;
+		this.ket = ket;
 	}
 	
 	public void show() {
@@ -89,7 +89,7 @@ public class BraKetVector{
 		else if(this.isEqual('1') || this.isEqual('-')) System.out.print("bit: "+1+" ");
 		
 		
-		System.out.print(this.bra+"\n");
+		System.out.print(this.ket+"\n");
 	}
 	
 	public boolean isEqual(char a) {
@@ -98,7 +98,7 @@ public class BraKetVector{
 	
 	public boolean isEqual(BraKetVector a) {
 		if(this.size != a.size) return false;
-		if(this.bra != a.bra) return false;
+		if(this.ket != a.ket) return false;
 				
 		for(int i=0; i<this.size; i++) {
 			if(this.vector[i] != a.vector[i]) return false;
@@ -109,7 +109,7 @@ public class BraKetVector{
 	//転置
 	public BraKetVector t() {
 		BraKetVector a = new BraKetVector(this.vector);
-		a.bra = !this.bra;
+		a.ket = !this.ket;
 		return a;
 	}
 	
@@ -134,7 +134,7 @@ public class BraKetVector{
 			return;
 		}
 		
-		if(a.bra != b.bra) {
+		if(a.ket != b.ket) {
 			System.out.println("Different Bra-Ket of Kets");
 			return;
 		}
@@ -153,7 +153,7 @@ public class BraKetVector{
 			return;
 		}
 		
-		if(a.bra != b.bra) {
+		if(a.ket != b.ket) {
 			System.out.println("Different Bra-Ket of Kets");
 			return;
 		}
@@ -172,15 +172,15 @@ public class BraKetVector{
 		for(int i=0; i<b.size; i++) {
 			ans[i] = a * b.vector[i];
 		}
-		this.setData(ans, b.bra);
+		this.setData(ans, b.ket);
 	}
 	
 	public double dot(BraKetVector b) {
 		
 		
-		if(!(this.bra == false && b.bra == true)) {
+		if(!(this.ket == false && b.ket == true)) {
 			System.out.print("ベクトル方向が違う: ");
-			System.out.print("a="+this.bra + "b="+b.bra);
+			System.out.print("a="+this.ket + "b="+b.ket);
 			return 0;
 		}
 		if(this.size != b.size) {
