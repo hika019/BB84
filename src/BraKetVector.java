@@ -5,15 +5,17 @@ public class BraKetVector{
 	int size;
 	boolean ket;
 	
-	
+	//|0>の生成
 	public BraKetVector() {
 		createVector(0);
 	}
 	
+	//bit(0, 1), kei(0:01系, 1:+-系)のケットベクトルの生成
 	public BraKetVector(int bit, int kei) {
 		createVector(kei*2+bit);
 	}
 	
+	//c(0, 1, +, -) |c>の生成
 	public BraKetVector(char c) {
 		if(c == '0') {
 			createVector(0);
@@ -26,15 +28,18 @@ public class BraKetVector{
 		}
 	}
 	
+	//v(0:0, 1:1, 2:+, 3:-) |v>の生成
 	public BraKetVector(int v) {
 		createVector(v);
 		
 	};
 	
+	//指定したベクトルのケットベクトルの生成
 	public BraKetVector(double[] vec) {
 		setData(vec);
 	};
 	
+	//v(0:0, 1:1, 2:+, 3:-) |v>に対応したベクトルを生成
 	private void createVector(int v) {
 		if(v == 0) {
 			double[] vec = new double[2];
@@ -59,6 +64,7 @@ public class BraKetVector{
 		}
 	}
 	
+	//setData()とcreateVector()要リファクタリング
 	private void setData(BraKetVector a) {
 		setData(a.vector, a.ket);
 	}
@@ -73,10 +79,12 @@ public class BraKetVector{
 		this.ket = ket;
 	}
 	
+	//対応するbitを表示
 	public void show() {
 		this.show(false);
 	}
 	
+	//ベクトルの状態と対応するbitを表示
 	public void show(boolean a) {
 		if(a) {
 			System.out.print(this.size + ": ");
@@ -92,10 +100,12 @@ public class BraKetVector{
 		System.out.print(this.ket+"\n");
 	}
 	
+	//ベクトルが等しいか
 	public boolean isEqual(char a) {
 		return this.isEqual(new BraKetVector(a));
 	}
 	
+	//与えられたブラケットベクトルと等しいか
 	public boolean isEqual(BraKetVector a) {
 		if(this.size != a.size) return false;
 		if(this.ket != a.ket) return false;
@@ -127,7 +137,7 @@ public class BraKetVector{
 		this.setData(ans);
 	}
 	
-	
+	//加算
 	public void add(BraKetVector a,BraKetVector b) {
 		if(a.size != b.size) {
 			System.out.println("Different size of Kets");
@@ -146,7 +156,7 @@ public class BraKetVector{
 		this.setData(ans);
 	}
 	
-	
+	//減算
 	public void sub(BraKetVector a,BraKetVector b) {
 		if(a.size != b.size) {
 			System.out.println("Different size of Kets");
@@ -165,7 +175,7 @@ public class BraKetVector{
 		this.setData(ans);
 	}
 	
-	
+	//乗算
 	public void mul(double a, BraKetVector b) {
 		double[] ans = new double[b.size];
 		
@@ -175,9 +185,8 @@ public class BraKetVector{
 		this.setData(ans, b.ket);
 	}
 	
+	//内積
 	public double dot(BraKetVector b) {
-		
-		
 		if(!(this.ket == false && b.ket == true)) {
 			System.out.print("ベクトル方向が違う: ");
 			System.out.print("a="+this.ket + "b="+b.ket);
@@ -196,13 +205,13 @@ public class BraKetVector{
 		return ans;
 	}
 	
-	
+	//対応するビットを返す
 	public int toBit() {
 		if(this.isEqual('0') || this.isEqual('+')) return 0;
 		else return 1;
 	}
 	
-	
+	//group("01":01測定, "+-": +-測定)測定
 	public BraKetVector measurement(String group) {
 		
 		if(group == "01") {
@@ -229,6 +238,7 @@ public class BraKetVector{
 		return new BraKetVector();
 	}
 	
+	//group(偶数:01測定, 奇数: +-測定)測定
 	public BraKetVector measurement(int a) {
 		if(a%2 == 0) return measurement("01");
 		else return measurement("+-");
