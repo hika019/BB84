@@ -7,30 +7,30 @@ public class BraKetVector{
 	
 	//|0>の生成
 	public BraKetVector() {
-		createVector(0);
+		setBraket(0);
 	}
 	
 	//bit(0, 1), kei(0:01系, 1:+-系)のケットベクトルの生成
 	public BraKetVector(int bit, int kei) {
-		createVector(kei*2+bit);
+		setBraket(kei*2+bit);
 	}
 	
 	//c(0, 1, +, -) |c>の生成
 	public BraKetVector(char c) {
 		if(c == '0') {
-			createVector(0);
+			setBraket(0);
 		}else if(c == '1') {
-			createVector(1);
+			setBraket(1);
 		}else if(c == '+') {
-			createVector(2);
+			setBraket(2);
 		}else if(c == '-') {
-			createVector(3);
+			setBraket(3);
 		}
 	}
 	
 	//v(0:0, 1:1, 2:+, 3:-) |v>の生成
 	public BraKetVector(int v) {
-		createVector(v);
+		setBraket(v);
 		
 	};
 	
@@ -40,7 +40,7 @@ public class BraKetVector{
 	};
 	
 	//v(0:0, 1:1, 2:+, 3:-) |v>に対応したベクトルを生成
-	private void createVector(int v) {
+	private void setBraket(int v) {
 		if(v == 0) {
 			double[] vec = new double[2];
 			vec[0] = 1;
@@ -123,20 +123,6 @@ public class BraKetVector{
 		return a;
 	}
 	
-	//テンソル積
-	public void tensorProduct(BraKetVector a, BraKetVector b) {
-		
-		double[] ans = new double[a.size*b.size];
-		
-		for(int i=0; i<a.size; i++) {
-			for(int j=0; j<b.size; j++) {
-				ans[(i*b.size)+j] = a.vector[i]*b.vector[j];
-			}
-		}
-		
-		this.setData(ans);
-	}
-	
 	//加算
 	public void add(BraKetVector a,BraKetVector b) {
 		if(a.size != b.size) {
@@ -213,7 +199,6 @@ public class BraKetVector{
 	
 	//group("01":01測定, "+-": +-測定)測定
 	public BraKetVector measurement(String group) {
-		
 		if(group == "01") {
 			BraKetVector a = new BraKetVector('0');
 			Random r = new Random();
@@ -238,9 +223,9 @@ public class BraKetVector{
 		return new BraKetVector();
 	}
 	
-	//group(偶数:01測定, 奇数: +-測定)測定
-	public BraKetVector measurement(int a) {
-		if(a%2 == 0) return measurement("01");
+	//group(偶数:01系測定, 奇数: +-系測定)測定
+	public BraKetVector measurement(int group) {
+		if(group%2 == 0) return measurement("01");
 		else return measurement("+-");
 	}
 

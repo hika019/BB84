@@ -114,5 +114,4 @@ public class BB84 {
 	public static BraKetVector network(BraKetVector qbit, boolean wiretap) {
 		return network(qbit, wiretap, false);
 	}
-
 }
