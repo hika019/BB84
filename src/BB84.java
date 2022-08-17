@@ -7,25 +7,23 @@ public class BB84 {
 	 */
 	
     public static void main(String[] args) {
+    	long startTime = System.currentTimeMillis();
 		Random rand = new Random();
 		
 		/*
 		 * n: 鍵長
 		 * m: 安全性パラメータ
 		 */
-		int n = (int)Math.pow(50, 4);
+		int n = 1000;
 		int m = 100;
 		
 		
-		/*
-		 * aliceBits: Aliceが保存するビット列
-		 * bobBits: Bobが保存するビット列
-		 */
+		//ビット列
 		int[] aliceBits = new int[n+m];
 		int[] bobBits = new int[n+m];
 		
 		
-		//送信
+		//プロトコル
 		for(int i=0; i<n+m;) {
 			
 			/* Alice
@@ -38,7 +36,7 @@ public class BB84 {
 			
 			
 			//NetWork
-			BraKetVector getQbit = network(aliceQbit, true);
+			BraKetVector getQbit = network(aliceQbit, false);
 			
 			
 			/* Bob
@@ -71,6 +69,22 @@ public class BB84 {
 			wiretap = wiretap || (aliceBits[i]!=bobBits[i]);
 		}
 		
+		
+		//鍵の生成
+		int[] key = new int[n];
+		if(wiretap == false) {
+			int keyIndex = 0;
+			for(int i=0; i<start; i++, keyIndex++) {
+				key[keyIndex] = bobBits[i];
+			}
+			for(int i= start+m; i<n+m; i++, keyIndex++) {
+				key[keyIndex] = bobBits[i];
+			}
+		}
+		
+		
+		
+		
 		//結果の出力
 		System.out.println("wiretap: "+wiretap);
 		System.out.print("Alice:\n");
@@ -85,6 +99,17 @@ public class BB84 {
 		}
 		System.out.println();
 		
+		System.out.print("key= ");
+		if(wiretap) {
+			System.out.print("null");
+		}else {
+			for(int i=0; i<n; i++) {
+				System.out.print(key[i]);
+			}
+		}
+		System.out.println();
+		
+		System.out.println("time: " + (System.currentTimeMillis()-startTime) +"ms");
 		
 	}
 	
