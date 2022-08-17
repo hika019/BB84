@@ -64,7 +64,7 @@ public class BraKetVector{
 		}
 	}
 	
-	//setData()とcreateVector()要リファクタリング
+	//フィールドに値を代入
 	private void setData(BraKetVector a) {
 		setData(a.vector, a.ket);
 	}
