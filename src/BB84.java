@@ -12,52 +12,50 @@ public class BB84 {
 	public static void main(String[] args) throws Exception {
 		long startTime = System.currentTimeMillis();
 		Random rand = new Random();
-		ExecutorService es = Executors.newWorkStealingPool(10);
-
+		ExecutorService es = Executors.newWorkStealingPool(5);
 
 		/*
 		 * n: 鍵長
 		 * m: 安全性パラメータ
 		 */
-		final int n = 10000000;
+		final int n = 1000000000;
 		final int m = 100;
 
 		// ビット列
-		int[] aliceBits = new int[n + m];
-		int[] bobBits = new int[n + m];
+		Boolean[] aliceBits = new Boolean[n + m];
+		Boolean[] bobBits = new Boolean[n + m];
 
-
-		final int parallel = (n+m)/25;
+		final int parallel = (n + m) / 25;
 
 		// プロトコル
-		//25に分割＆並列処理
-		try{
+		// 25に分割＆並列処理
+		try {
 			es.execute(() -> mainRoutine(0, parallel, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel, parallel*2, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*2, parallel*3, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*3, parallel*4, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*4, parallel*5, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*5, parallel*6, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*6, parallel*7, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*7, parallel*8, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*8, parallel*9, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*9, parallel*10, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*10, parallel*11, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*11, parallel*12, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*12, parallel*13, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*13, parallel*14, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*14, parallel*15, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*15, parallel*16, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*16, parallel*17, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*17, parallel*18, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*18, parallel*19, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*19, parallel*20, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*20, parallel*21, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*21, parallel*22, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*22, parallel*23, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*23, parallel*24, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel*24, parallel*25, aliceBits, bobBits));
-		}finally{
+			es.execute(() -> mainRoutine(parallel, parallel * 2, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 2, parallel * 3, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 3, parallel * 4, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 4, parallel * 5, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 5, parallel * 6, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 6, parallel * 7, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 7, parallel * 8, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 8, parallel * 9, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 9, parallel * 10, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 10, parallel * 11, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 11, parallel * 12, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 12, parallel * 13, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 13, parallel * 14, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 14, parallel * 15, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 15, parallel * 16, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 16, parallel * 17, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 17, parallel * 18, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 18, parallel * 19, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 19, parallel * 20, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 20, parallel * 21, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 21, parallel * 22, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 22, parallel * 23, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 23, parallel * 24, aliceBits, bobBits));
+			es.execute(() -> mainRoutine(parallel * 24, parallel * 25, aliceBits, bobBits));
+		} finally {
 			es.shutdown();
 			es.awaitTermination(1, TimeUnit.MINUTES);
 		}
@@ -78,7 +76,7 @@ public class BB84 {
 		}
 
 		// 鍵の生成
-		int[] key = new int[n];
+		Boolean[] key = new Boolean[n];
 		if (wiretap == false) {
 			int keyIndex = 0;
 			for (int i = 0; i < start; i++, keyIndex++) {
@@ -91,19 +89,21 @@ public class BB84 {
 
 		// 結果の出力
 		/*
-		System.out.println("wiretap: " + wiretap);
-		System.out.print("Alice:\n");
-		for (int i = 0; i < n + m; i++) {
-			System.out.print(aliceBits[i] + ",");
-		}
-		System.out.println();
-
-		System.out.print("Bob:\n");
-		for (int i = 0; i < n + m; i++) {
-			System.out.print(bobBits[i] + ",");
-		}
-		System.out.println();
-		
+		 * System.out.println("wiretap: " + wiretap);
+		 * 
+		 * System.out.print("Alice:\n");
+		 * for (int i = 0; i < n + m; i++) {
+		 * System.out.print(aliceBits[i] + ",");
+		 * }
+		 * System.out.println();
+		 * 
+		 * System.out.print("Bob:\n");
+		 * for (int i = 0; i < n + m; i++) {
+		 * System.out.print(bobBits[i] + ",");
+		 * }
+		 * System.out.println();
+		 */
+		/*
 		System.out.print("key= ");
 		if (wiretap) {
 			System.out.print("null");
@@ -118,9 +118,9 @@ public class BB84 {
 
 	}
 
-	public static void mainRoutine(int start, int end, int[] aliceBits, int[] bobBits) {
+	public static void mainRoutine(int start, int end, Boolean[] aliceBits, Boolean[] bobBits) {
 		Random rand = new Random();
-		//System.out.println(Thread.currentThread().getId());
+		// System.out.println(Thread.currentThread().getId());
 		// プロトコル
 		for (int i = start; i < end;) {
 
@@ -130,7 +130,7 @@ public class BB84 {
 			 * aliceQbit: 送信するqbit
 			 */
 			int aliceMeasurement = rand.nextInt(2);
-			aliceBits[i] = rand.nextInt(2);
+			aliceBits[i] = rand.nextBoolean();
 			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
 
 			// NetWork

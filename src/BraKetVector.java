@@ -14,6 +14,13 @@ public class BraKetVector{
 	public BraKetVector(int bit, int kei) {
 		setBraket(kei*2+bit);
 	}
+
+	//bit(true:0, false:1), kei(0:01系, 1:+-系)のケットベクトルの生成
+	public BraKetVector(Boolean bit, int kei){
+		int tmp = kei*2;
+		if(!bit)tmp+=1;
+		setBraket(tmp);
+	}
 	
 	//c(0, 1, +, -) |c>の生成
 	public BraKetVector(char c) {
@@ -192,9 +199,9 @@ public class BraKetVector{
 	}
 	
 	//対応するビットを返す
-	public int toBit() {
-		if(this.isEqual('0') || this.isEqual('+')) return 0;
-		else return 1;
+	public Boolean toBit(){
+		if(this.isEqual('0') || this.isEqual('+')) return true;
+		else return false;
 	}
 	
 	//group("01":01測定, "+-": +-測定)測定
