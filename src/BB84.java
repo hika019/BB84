@@ -12,23 +12,24 @@ public class BB84 {
 	public static void main(String[] args) throws Exception {
 		long startTime = System.currentTimeMillis();
 		Random rand = new Random();
-		ExecutorService es = Executors.newWorkStealingPool(5);
+		ExecutorService es = Executors.newWorkStealingPool(3);
 
 		/*
 		 * n: 鍵長
 		 * m: 安全性パラメータ
 		 */
-		final int n = 1000000000;
+		final int n = 100000000;
 		final int m = 100;
 
 		// ビット列
 		Boolean[] aliceBits = new Boolean[n + m];
 		Boolean[] bobBits = new Boolean[n + m];
 
-		final int parallel = (n + m) / 25;
-
 		// プロトコル
 		// 25に分割＆並列処理
+		//mainRoutine(0, n+m, aliceBits, bobBits);
+		
+		final int parallel = (n + m) / 25;
 		try {
 			es.execute(() -> mainRoutine(0, parallel, aliceBits, bobBits));
 			es.execute(() -> mainRoutine(parallel, parallel * 2, aliceBits, bobBits));
@@ -55,12 +56,14 @@ public class BB84 {
 			es.execute(() -> mainRoutine(parallel * 22, parallel * 23, aliceBits, bobBits));
 			es.execute(() -> mainRoutine(parallel * 23, parallel * 24, aliceBits, bobBits));
 			es.execute(() -> mainRoutine(parallel * 24, parallel * 25, aliceBits, bobBits));
+
 		} finally {
 			es.shutdown();
 			es.awaitTermination(1, TimeUnit.MINUTES);
 		}
-		System.out.println("送信終了");
-		System.out.println();
+		
+		//System.out.println("送信終了");
+		//System.out.println();
 
 		/*
 		 * パラメータ
@@ -104,24 +107,25 @@ public class BB84 {
 		 * System.out.println();
 		 */
 		/*
-		System.out.print("key= ");
-		if (wiretap) {
-			System.out.print("null");
-		} else {
-			for (int i = 0; i < n; i++) {
-				System.out.print(key[i]);
-			}
-		}
-		System.out.println();
-		*/
+		 * System.out.print("key= ");
+		 * if (wiretap) {
+		 * System.out.print("null");
+		 * } else {
+		 * for (int i = 0; i < n; i++) {
+		 * System.out.print(key[i]);
+		 * }
+		 * }
+		 * System.out.println();
+		 */
 		System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
 
 	}
 
 	public static void mainRoutine(int start, int end, Boolean[] aliceBits, Boolean[] bobBits) {
 		Random rand = new Random();
-		// System.out.println(Thread.currentThread().getId());
 		// プロトコル
+
+		//System.out.println(Thread.currentThread().getId());
 		for (int i = start; i < end;) {
 
 			/*
@@ -134,7 +138,7 @@ public class BB84 {
 			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
 
 			// NetWork
-			BraKetVector getQbit = network(aliceQbit, false);
+			BraKetVector getQbit = network(aliceQbit, true);
 
 			/*
 			 * Bob

@@ -203,14 +203,26 @@ public class BraKetVector{
 		if(this.isEqual('0') || this.isEqual('+')) return true;
 		else return false;
 	}
+
+	//確率
+	private Boolean probability(double i){
+		if(0<=i&&i<=1){
+			Random r = new Random();
+			if(r.nextFloat() <= i){
+				return true;
+			}
+			return false;
+		}
+		System.out.println("err: probability(0~1) out of range");
+		return false;
+	}
 	
 	//group("01":01測定, "+-": +-測定)測定
 	public BraKetVector measurement(String group) {
 		if(group == "01") {
 			BraKetVector a = new BraKetVector('0');
-			Random r = new Random();
-			
-			if (r.nextInt(10000) < (int)(10000*(Math.pow(a.t().dot(this), 2)+0.0000000000000001))) {
+			var t = a.t().dot(this);
+			if (probability(((double)Math.round(t*t*1000000000))/1000000000)) {
 				return new BraKetVector('0');
 			}else {
 				return new BraKetVector('1');
@@ -218,9 +230,8 @@ public class BraKetVector{
 			
 		}else if(group == "+-") {
 			BraKetVector a = new BraKetVector('+');
-			Random r = new Random();
-			
-			if (r.nextInt(10000) < (int)(10000*(Math.pow(a.t().dot(this), 2)+0.0000000000000001))) {
+			var t = a.t().dot(this);
+			if (probability(((double)Math.round(t*t*1000000000))/1000000000)) {
 				return new BraKetVector('+');
 			}else {
 				return new BraKetVector('-');
@@ -235,5 +246,4 @@ public class BraKetVector{
 		if(group%2 == 0) return measurement("01");
 		else return measurement("+-");
 	}
-
 };
