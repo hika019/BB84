@@ -12,13 +12,13 @@ public class BB84 {
 	public static void main(String[] args) throws Exception {
 		long startTime = System.currentTimeMillis();
 		Random rand = new Random();
-		ExecutorService es = Executors.newWorkStealingPool(3);
+		ExecutorService es = Executors.newFixedThreadPool(3);
 
 		/*
 		 * n: 鍵長
 		 * m: 安全性パラメータ
 		 */
-		final int n = 100000000;
+		final int n = 1000000000;
 		final int m = 100;
 
 		// ビット列
@@ -27,8 +27,8 @@ public class BB84 {
 
 		// プロトコル
 		// 25に分割＆並列処理
-		//mainRoutine(0, n+m, aliceBits, bobBits);
-		
+		//mainRoutine(0, n + m, aliceBits, bobBits);
+
 		final int parallel = (n + m) / 25;
 		try {
 			es.execute(() -> mainRoutine(0, parallel, aliceBits, bobBits));
@@ -59,11 +59,9 @@ public class BB84 {
 
 		} finally {
 			es.shutdown();
-			es.awaitTermination(1, TimeUnit.MINUTES);
+			es.awaitTermination(10, TimeUnit.MINUTES);
 		}
-		
-		//System.out.println("送信終了");
-		//System.out.println();
+
 
 		/*
 		 * パラメータ
@@ -72,10 +70,10 @@ public class BB84 {
 		 */
 		int start = rand.nextInt(n);
 		boolean wiretap = false;
-
 		// 盗聴の確認
 		for (int i = start; i < start + m; i++) {
 			wiretap = wiretap || (aliceBits[i] != bobBits[i]);
+			if (wiretap) break;
 		}
 
 		// 鍵の生成
@@ -89,11 +87,10 @@ public class BB84 {
 				key[keyIndex] = bobBits[i];
 			}
 		}
-
 		// 結果の出力
+
+		System.out.println("wiretap: " + wiretap);
 		/*
-		 * System.out.println("wiretap: " + wiretap);
-		 * 
 		 * System.out.print("Alice:\n");
 		 * for (int i = 0; i < n + m; i++) {
 		 * System.out.print(aliceBits[i] + ",");
@@ -118,14 +115,14 @@ public class BB84 {
 		 * System.out.println();
 		 */
 		System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
-
 	}
+
 
 	public static void mainRoutine(int start, int end, Boolean[] aliceBits, Boolean[] bobBits) {
 		Random rand = new Random();
 		// プロトコル
 
-		//System.out.println(Thread.currentThread().getId());
+		 System.out.println(Thread.currentThread().getId());
 		for (int i = start; i < end;) {
 
 			/*
@@ -139,6 +136,7 @@ public class BB84 {
 
 			// NetWork
 			BraKetVector getQbit = network(aliceQbit, true);
+			aliceQbit = null;
 
 			/*
 			 * Bob
@@ -167,7 +165,7 @@ public class BB84 {
 
 		Random rand = new Random();
 
-		int eveMeasurement = rand.nextInt(2);
+		Boolean eveMeasurement = rand.nextBoolean();
 		BraKetVector tmp = in.measurement(eveMeasurement);
 
 		if (info) {
