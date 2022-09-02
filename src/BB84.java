@@ -1,7 +1,4 @@
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class BB84 {
 
@@ -17,7 +14,7 @@ public class BB84 {
 		 * n: 鍵長
 		 * m: 安全性パラメータ
 		 */
-		final int n = 1000000000;
+		final int n = 1000;
 		final int m = 100;
 
 		// ビット列
@@ -25,7 +22,7 @@ public class BB84 {
 		Boolean[] bobBits = new Boolean[n + m];
 
 		// プロトコル
-		for (int i = 0; i < n+m;) {
+		for (int i = 0; i < n + m;) {
 			/*
 			 * Alice
 			 * aliceMeasurement: 送信する系
@@ -36,7 +33,7 @@ public class BB84 {
 			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
 
 			// NetWork
-			BraKetVector getQbit = network(aliceQbit, true);	
+			BraKetVector getQbit = network(aliceQbit, false);
 
 			/*
 			 * Bob
@@ -53,7 +50,6 @@ public class BB84 {
 			}
 		}
 
-
 		/*
 		 * パラメータ
 		 * start: 盗聴の確認を行う際の開始地点
@@ -64,7 +60,8 @@ public class BB84 {
 		// 盗聴の確認
 		for (int i = start; i < start + m; i++) {
 			wiretap = wiretap || (aliceBits[i] != bobBits[i]);
-			if (wiretap) break;
+			if (wiretap)
+				break;
 		}
 
 		// 鍵の生成
@@ -82,29 +79,33 @@ public class BB84 {
 
 		System.out.println("wiretap: " + wiretap);
 		/*
-		 * System.out.print("Alice:\n");
-		 * for (int i = 0; i < n + m; i++) {
-		 * System.out.print(aliceBits[i] + ",");
-		 * }
-		 * System.out.println();
-		 * 
-		 * System.out.print("Bob:\n");
-		 * for (int i = 0; i < n + m; i++) {
-		 * System.out.print(bobBits[i] + ",");
-		 * }
-		 * System.out.println();
-		 */
-		/*
-		 * System.out.print("key= ");
-		 * if (wiretap) {
-		 * System.out.print("null");
-		 * } else {
-		 * for (int i = 0; i < n; i++) {
-		 * System.out.print(key[i]);
-		 * }
-		 * }
-		 * System.out.println();
-		 */
+		System.out.print("Alice:\n");
+		for (int i = 0; i < n + m; i++) {
+			System.out.print(aliceBits[i] + ",");
+		}
+		System.out.println();
+		System.out.print("Bob:\n");
+		for (int i = 0; i < n + m; i++) {
+			System.out.print(bobBits[i] + ",");
+		}
+		System.out.println();
+		*/
+
+		System.out.print("key= ");
+		if (wiretap) {
+			System.out.print("null");
+		} else {
+			for (int i = 0; i < n; i++) {
+				if(key[i] == true){
+					System.out.print(0);
+				}else{
+					System.out.print(1);
+				}
+				
+			}
+		}
+		System.out.println();
+
 		System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
 	}
 
