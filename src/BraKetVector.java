@@ -17,6 +17,7 @@ public class BraKetVector{
 
 	//bit(true:0, false:1), kei(0:01系, 1:+-系)のケットベクトルの生成
 	public BraKetVector(Boolean bit, int kei){
+		kei = kei%2;
 		int tmp = kei*2;
 		if(!bit)tmp+=1;
 		setBraket(tmp);
@@ -223,6 +224,8 @@ public class BraKetVector{
 				return a;
 			}else {
 				return new BraKetVector('1');
+				//a.vector[1] *= -1;
+				//return a;
 			}
 			
 		}else{
@@ -231,7 +234,9 @@ public class BraKetVector{
 			if (randFloat <=((double)Math.round(t*t*1000000000))/1000000000) {
 				return a;
 			}else {
-				return new BraKetVector('-');
+				//return new BraKetVector('-');と同じ
+				a.vector[1] *= -1;
+				return a;
 			}
 		}
 	}
