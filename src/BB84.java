@@ -12,7 +12,6 @@ public class BB84 {
 	public static void main(String[] args) throws Exception {
 		long startTime = System.currentTimeMillis();
 		Random rand = new Random();
-		ExecutorService es = Executors.newFixedThreadPool(3);
 
 		/*
 		 * n: 鍵長
@@ -26,40 +25,32 @@ public class BB84 {
 		Boolean[] bobBits = new Boolean[n + m];
 
 		// プロトコル
-		// 25に分割＆並列処理
-		//mainRoutine(0, n + m, aliceBits, bobBits);
+		for (int i = 0; i < n+m;) {
+			/*
+			 * Alice
+			 * aliceMeasurement: 送信する系
+			 * aliceQbit: 送信するqbit
+			 */
+			int aliceMeasurement = rand.nextInt(2);
+			aliceBits[i] = rand.nextBoolean();
+			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
 
-		final int parallel = (n + m) / 25;
-		try {
-			es.execute(() -> mainRoutine(0, parallel, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel, parallel * 2, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 2, parallel * 3, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 3, parallel * 4, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 4, parallel * 5, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 5, parallel * 6, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 6, parallel * 7, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 7, parallel * 8, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 8, parallel * 9, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 9, parallel * 10, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 10, parallel * 11, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 11, parallel * 12, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 12, parallel * 13, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 13, parallel * 14, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 14, parallel * 15, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 15, parallel * 16, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 16, parallel * 17, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 17, parallel * 18, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 18, parallel * 19, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 19, parallel * 20, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 20, parallel * 21, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 21, parallel * 22, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 22, parallel * 23, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 23, parallel * 24, aliceBits, bobBits));
-			es.execute(() -> mainRoutine(parallel * 24, parallel * 25, aliceBits, bobBits));
+			// NetWork
+			BraKetVector getQbit = network(aliceQbit, true);	
 
-		} finally {
-			es.shutdown();
-			es.awaitTermination(10, TimeUnit.MINUTES);
+			/*
+			 * Bob
+			 * bobMeasurement: 測定する系
+			 * bobQbit: 測定後の状態
+			 */
+			int bobMeasurement = rand.nextInt(2);
+			BraKetVector bobQbit = getQbit.measurement(bobMeasurement);
+			bobBits[i] = bobQbit.toBit();
+
+			// 系の確認
+			if (aliceMeasurement == bobMeasurement) {
+				i++;
+			}
 		}
 
 
@@ -115,43 +106,6 @@ public class BB84 {
 		 * System.out.println();
 		 */
 		System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
-	}
-
-
-	public static void mainRoutine(int start, int end, Boolean[] aliceBits, Boolean[] bobBits) {
-		Random rand = new Random();
-		// プロトコル
-
-		 System.out.println(Thread.currentThread().getId());
-		for (int i = start; i < end;) {
-
-			/*
-			 * Alice
-			 * aliceMeasurement: 送信する系
-			 * aliceQbit: 送信するqbit
-			 */
-			int aliceMeasurement = rand.nextInt(2);
-			aliceBits[i] = rand.nextBoolean();
-			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
-
-			// NetWork
-			BraKetVector getQbit = network(aliceQbit, true);
-			aliceQbit = null;
-
-			/*
-			 * Bob
-			 * bobMeasurement: 測定する系
-			 * bobQbit: 測定後の状態
-			 */
-			int bobMeasurement = rand.nextInt(2);
-			BraKetVector bobQbit = getQbit.measurement(bobMeasurement);
-			bobBits[i] = bobQbit.toBit();
-
-			// 系の確認
-			if (aliceMeasurement == bobMeasurement) {
-				i++;
-			}
-		}
 	}
 
 	public static BraKetVector network(BraKetVector in, boolean wiretap, boolean info) {
