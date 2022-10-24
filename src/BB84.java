@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import com.aparapi.Kernel;
+
 public class BB84 {
 
 	/*
@@ -14,32 +16,66 @@ public class BB84 {
 		 * n: 鍵長
 		 * m: 安全性パラメータ
 		 */
-		final int n = 1000;
+		final int n = 1000000000;
 		final int m = 100;
 
 		// ビット列
-		Boolean[] aliceBits = new Boolean[n + m];
-		Boolean[] bobBits = new Boolean[n + m];
+		final Boolean[] aliceBits = new Boolean[n + m];
+		final Boolean[] bobBits = new Boolean[n + m];
+		
+		
+		Kernel kernel = new Kernel() {
+            @Override
+            public void run() {
+                int i = getGlobalId();
+                while(true) {
+                    
 
+                    int aliceMeasurement = rand.nextInt(2);
+                    aliceBits[i] = rand.nextBoolean();
+                    BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
+
+                    // NetWork
+                    BraKetVector getQbit = network(aliceQbit, true);
+
+
+                    int bobMeasurement = rand.nextInt(2);
+                    BraKetVector bobQbit = getQbit.measurement(bobMeasurement);
+                    bobBits[i] = bobQbit.toBit();
+
+                    // 系の確認
+                    if (aliceMeasurement == bobMeasurement) {
+                        break;
+                    }
+                    
+                }
+                
+            }
+		    
+		    
+		};
+		
+		
+		/*
 		// プロトコル
 		for (int i = 0; i < n + m;) {
-			/*
-			 * Alice
-			 * aliceMeasurement: 送信する系
-			 * aliceQbit: 送信するqbit
-			 */
+			
+			 // Alice
+			 // aliceMeasurement: 送信する系
+			 // aliceQbit: 送信するqbit
+			 
 			int aliceMeasurement = rand.nextInt(2);
 			aliceBits[i] = rand.nextBoolean();
 			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
 
 			// NetWork
-			BraKetVector getQbit = network(aliceQbit, false);
+			BraKetVector getQbit = network(aliceQbit, true);
 
-			/*
-			 * Bob
-			 * bobMeasurement: 測定する系
-			 * bobQbit: 測定後の状態
-			 */
+			
+			 // Bob
+			 // bobMeasurement: 測定する系
+			 // bobQbit: 測定後の状態
+			 
 			int bobMeasurement = rand.nextInt(2);
 			BraKetVector bobQbit = getQbit.measurement(bobMeasurement);
 			bobBits[i] = bobQbit.toBit();
@@ -49,6 +85,12 @@ public class BB84 {
 				i++;
 			}
 		}
+	    */
+		
+		System.out.println( kernel.getTargetDevice() );
+		kernel.execute(n+m);
+		System.out.println( kernel.getTargetDevice() );
+
 
 		/*
 		 * パラメータ
@@ -90,7 +132,7 @@ public class BB84 {
 		}
 		System.out.println();
 		*/
-
+		/*
 		System.out.print("key= ");
 		if (wiretap) {
 			System.out.print("null");
@@ -104,6 +146,7 @@ public class BB84 {
 				
 			}
 		}
+		*/
 		System.out.println();
 
 		System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");

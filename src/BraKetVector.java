@@ -2,7 +2,6 @@ import java.util.Random;
 
 public class BraKetVector{
 	double[] vector;
-	int size;
 	boolean ket;
 
 	//|0>の生成
@@ -17,10 +16,7 @@ public class BraKetVector{
 
 	//bit(true:0, false:1), kei(0:01系, 1:+-系)のケットベクトルの生成
 	public BraKetVector(Boolean bit, int kei){
-		kei = kei%2;
-		int tmp = kei*2;
-		if(!bit)tmp+=1;
-		setBraket(tmp);
+		setBraket(bit, kei);
 	}
 	
 	//c(0, 1, +, -) |c>の生成
@@ -40,12 +36,19 @@ public class BraKetVector{
 	public BraKetVector(int v) {
 		setBraket(v);
 		
-	};
+	}
 	
 	//指定したベクトルのケットベクトルの生成
 	public BraKetVector(double[] vec) {
 		setData(vec);
-	};
+	}
+
+	public void setBraket(Boolean bit, int kei) {
+		kei = kei%2;
+		int tmp = kei*2;
+		if(!bit)tmp+=1;
+		setBraket(tmp);
+	}
 	
 	//v(0:0, 1:1, 2:+, 3:-) |v>に対応したベクトルを生成
 	private void setBraket(int v) {
@@ -84,7 +87,6 @@ public class BraKetVector{
 	
 	private void setData(double[] vector, boolean ket) {
 		this.vector = vector;
-		this.size = vector.length;
 		this.ket = ket;
 	}
 	
@@ -96,8 +98,8 @@ public class BraKetVector{
 	//ベクトルの状態と対応するbitを表示
 	public void show(boolean a) {
 		if(a) {
-			System.out.print(this.size + ": ");
-			for(int i=0; i<this.size; i++) {
+			System.out.print(this.vector.length + ": ");
+			for(int i=0; i<this.vector.length; i++) {
 				System.out.print(this.vector[i] + ", ");
 			}
 		}
@@ -115,10 +117,10 @@ public class BraKetVector{
 	
 	//与えられたブラケットベクトルと等しいか
 	public boolean isEqual(BraKetVector a) {
-		if(this.size != a.size) return false;
+		if(this.vector.length != a.vector.length) return false;
 		if(this.ket != a.ket) return false;
 				
-		for(int i=0; i<this.size; i++) {
+		for(int i=0; i<this.vector.length; i++) {
 			if(this.vector[i] != a.vector[i]) return false;
 		}
 		return true;
@@ -133,7 +135,7 @@ public class BraKetVector{
 	
 	//加算
 	public void add(BraKetVector a,BraKetVector b) {
-		if(a.size != b.size) {
+		if(a.vector.length != b.vector.length) {
 			System.out.println("Different size of Kets");
 			return;
 		}
@@ -143,8 +145,8 @@ public class BraKetVector{
 			return;
 		}
 		
-		double[] ans = new double[a.size];
-		for(int i=0; i<a.size; i++) {
+		double[] ans = new double[a.vector.length];
+		for(int i=0; i<a.vector.length; i++) {
 			ans[i] = a.vector[i] + b.vector[i];
 		}
 		this.setData(ans);
@@ -152,7 +154,7 @@ public class BraKetVector{
 	
 	//減算
 	public void sub(BraKetVector a,BraKetVector b) {
-		if(a.size != b.size) {
+		if(a.vector.length != b.vector.length) {
 			System.out.println("Different size of Kets");
 			return;
 		}
@@ -162,8 +164,8 @@ public class BraKetVector{
 			return;
 		}
 		
-		double[] ans = new double[a.size];
-		int size = a.size;
+		double[] ans = new double[a.vector.length];
+		int size = a.vector.length;
 		for(int i=0; i<size; i++) {
 			ans[i] = a.vector[i] - b.vector[i];
 		}
@@ -172,8 +174,8 @@ public class BraKetVector{
 	
 	//乗算
 	public void mul(double a, BraKetVector b) {
-		double[] ans = new double[b.size];
-		int size = b.size;
+		double[] ans = new double[b.vector.length];
+		int size = b.vector.length;
 		for(int i=0; i<size; i++) {
 			ans[i] = a * b.vector[i];
 		}
@@ -187,9 +189,9 @@ public class BraKetVector{
 			System.out.print("a="+this.ket + "b="+b.ket);
 			return 0;
 		}
-		int size = this.size;
+		int size = this.vector.length;
 
-		if(size != b.size) {
+		if(size != b.vector.length) {
 			System.out.println("Different size of Kets");
 			return 0;
 		}
@@ -219,7 +221,7 @@ public class BraKetVector{
 		float randFloat = r.nextFloat();
 		if(group == true) {
 			BraKetVector a = new BraKetVector('0');
-			var t = a.t().dot(this);
+			double t = a.t().dot(this);
 			if (randFloat <=((double)Math.round(t*t*1000000000))/1000000000) {
 				return a;
 			}else {
@@ -230,7 +232,7 @@ public class BraKetVector{
 			
 		}else{
 			BraKetVector a = new BraKetVector('+');
-			var t = a.t().dot(this);
+			double t = a.t().dot(this);
 			if (randFloat <=((double)Math.round(t*t*1000000000))/1000000000) {
 				return a;
 			}else {
