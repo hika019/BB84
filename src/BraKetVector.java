@@ -219,7 +219,7 @@ public class BraKetVector{
 		float randFloat = r.nextFloat();
 		if(group == true) {
 			BraKetVector a = new BraKetVector('0');
-			var t = a.t().dot(this);
+			double t = a.t().dot(this);
 			if (randFloat <=((double)Math.round(t*t*1000000000))/1000000000) {
 				return a;
 			}else {
@@ -230,7 +230,7 @@ public class BraKetVector{
 			
 		}else{
 			BraKetVector a = new BraKetVector('+');
-			var t = a.t().dot(this);
+			double t = a.t().dot(this);
 			if (randFloat <=((double)Math.round(t*t*1000000000))/1000000000) {
 				return a;
 			}else {
