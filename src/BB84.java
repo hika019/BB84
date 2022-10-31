@@ -13,9 +13,11 @@ public class BB84 {
 		/*
 		 * n: 鍵長
 		 * m: 安全性パラメータ
+		 * 盗聴を行うか
 		 */
-		final int n = 1000;
+		final int n = 32;
 		final int m = 100;
+		final boolean Wiretap = true;
 
 		// ビット列
 		Boolean[] aliceBits = new Boolean[n + m];
@@ -33,7 +35,7 @@ public class BB84 {
 			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
 
 			// NetWork
-			BraKetVector getQbit = network(aliceQbit, false);
+			BraKetVector getQbit = network(aliceQbit, Wiretap);
 
 			/*
 			 * Bob
@@ -78,33 +80,29 @@ public class BB84 {
 		// 結果の出力
 
 		System.out.println("wiretap: " + wiretap);
-		/*
+		
 		System.out.print("Alice:\n");
 		for (int i = 0; i < n + m; i++) {
-			System.out.print(aliceBits[i] + ",");
+			System.out.print(BoolToBit(aliceBits[i]) + ",");
 		}
 		System.out.println();
 		System.out.print("Bob:\n");
 		for (int i = 0; i < n + m; i++) {
-			System.out.print(bobBits[i] + ",");
+			System.out.print(BoolToBit(bobBits[i]) + ",");
 		}
 		System.out.println();
-		*/
-
+		
+		
 		System.out.print("key= ");
 		if (wiretap) {
 			System.out.print("null");
 		} else {
 			for (int i = 0; i < n; i++) {
-				if(key[i] == true){
-					System.out.print(0);
-				}else{
-					System.out.print(1);
-				}
-				
+				System.out.print(BoolToBit(key[i]));
 			}
 		}
 		System.out.println();
+		
 
 		System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
 	}
@@ -134,5 +132,13 @@ public class BB84 {
 
 	public static BraKetVector network(BraKetVector qbit, boolean wiretap) {
 		return network(qbit, wiretap, false);
+	}
+
+	public static int BoolToBit(boolean f){
+		if(f == true){
+			return 0;
+		}else{
+			return 1;
+		}
 	}
 }
