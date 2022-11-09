@@ -89,7 +89,7 @@ public class BB84 {
 		
 		System.out.println( kernel.getTargetDevice() );
 		kernel.execute(n+m);
-		System.out.println( kernel.getTargetDevice() );
+		System.out.println( "device: "+kernel.getTargetDevice() );
 
 
 		/*
