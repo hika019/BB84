@@ -15,9 +15,9 @@ public class BB84 {
 		 * m: 安全性パラメータ
 		 * 盗聴を行うか
 		 */
-		final int n = 32;
+		final int n = 128;
 		final int m = 100;
-		final boolean Wiretap = true;
+		boolean wiretap = true;
 
 		// ビット列
 		Boolean[] aliceBits = new Boolean[n + m];
@@ -35,7 +35,7 @@ public class BB84 {
 			BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
 
 			// NetWork
-			BraKetVector getQbit = network(aliceQbit, Wiretap);
+			BraKetVector getQbit = network(aliceQbit, wiretap);
 
 			/*
 			 * Bob
@@ -58,7 +58,7 @@ public class BB84 {
 		 * wiretap: 盗聴の有無
 		 */
 		int start = rand.nextInt(n);
-		boolean wiretap = false;
+		wiretap = false;
 		// 盗聴の確認
 		for (int i = start; i < start + m; i++) {
 			wiretap = wiretap || (aliceBits[i] != bobBits[i]);
@@ -67,7 +67,7 @@ public class BB84 {
 		}
 
 		// 鍵の生成
-		Boolean[] key = new Boolean[n];
+		boolean[] key = new boolean[n];
 		if (wiretap == false) {
 			int keyIndex = 0;
 			for (int i = 0; i < start; i++, keyIndex++) {
@@ -83,12 +83,12 @@ public class BB84 {
 		
 		System.out.print("Alice:\n");
 		for (int i = 0; i < n + m; i++) {
-			System.out.print(BoolToBit(aliceBits[i]) + ",");
+			System.out.print(boolToBit(aliceBits[i]) + ",");
 		}
 		System.out.println();
 		System.out.print("Bob:\n");
 		for (int i = 0; i < n + m; i++) {
-			System.out.print(BoolToBit(bobBits[i]) + ",");
+			System.out.print(boolToBit(bobBits[i]) + ",");
 		}
 		System.out.println();
 		
@@ -98,7 +98,7 @@ public class BB84 {
 			System.out.print("null");
 		} else {
 			for (int i = 0; i < n; i++) {
-				System.out.print(BoolToBit(key[i]));
+				System.out.print(boolToBit(key[i]));
 			}
 		}
 		System.out.println();
@@ -134,7 +134,7 @@ public class BB84 {
 		return network(qbit, wiretap, false);
 	}
 
-	public static int BoolToBit(boolean f){
+	public static int boolToBit(boolean f){
 		if(f == true){
 			return 0;
 		}else{
