@@ -16,7 +16,7 @@ public class BB84 {
 		 * n: 鍵長
 		 * m: 安全性パラメータ
 		 */
-		final int n = 1000000000;
+		final int n = 10000000;
 		final int m = 100;
 
 		// ビット列
@@ -36,11 +36,11 @@ public class BB84 {
                     BraKetVector aliceQbit = new BraKetVector(aliceBits[i], aliceMeasurement);
 
                     // NetWork
-                    BraKetVector getQbit = network(aliceQbit, true);
+                    BraKetVector getQbit = network(aliceQbit, true, rand);
 
 
                     int bobMeasurement = rand.nextInt(2);
-                    BraKetVector bobQbit = getQbit.measurement(bobMeasurement);
+                    BraKetVector bobQbit = getQbit.measurement(bobMeasurement, rand);
                     bobBits[i] = bobQbit.toBit();
 
                     // 系の確認
@@ -152,7 +152,7 @@ public class BB84 {
 		System.out.println("time: " + (System.currentTimeMillis() - startTime) + "ms");
 	}
 
-	public static BraKetVector network(BraKetVector in, boolean wiretap, boolean info) {
+	public static BraKetVector network(BraKetVector in, boolean wiretap, boolean info, Random r) {
 		if (info) {
 			System.out.println("Send");
 			System.out.println("wiretap: " + wiretap);
@@ -161,10 +161,8 @@ public class BB84 {
 		if (wiretap == false)
 			return in;
 
-		Random rand = new Random();
-
-		Boolean eveMeasurement = rand.nextBoolean();
-		BraKetVector tmp = in.measurement(eveMeasurement);
+		Boolean eveMeasurement = r.nextBoolean();
+		BraKetVector tmp = in.measurement(eveMeasurement, r);
 
 		if (info) {
 			System.out.println("Eve_measurement: " + eveMeasurement);
@@ -175,7 +173,7 @@ public class BB84 {
 		return tmp;
 	}
 
-	public static BraKetVector network(BraKetVector qbit, boolean wiretap) {
-		return network(qbit, wiretap, false);
+	public static BraKetVector network(BraKetVector qbit, boolean wiretap, Random r) {
+		return network(qbit, wiretap, false, r);
 	}
 }
