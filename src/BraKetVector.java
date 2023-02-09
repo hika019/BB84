@@ -210,12 +210,11 @@ public class BraKetVector{
 
 	
 	//group("01":01測定, "+-": +-測定)測定
-	public BraKetVector measurement(String group) {
-		return measurement(group == "01");
+	public BraKetVector measurement(String group, Random r) {
+		return measurement(group == "01", r);
 	}
 
-	public BraKetVector measurement(Boolean group) {
-		Random r = new Random();
+	public BraKetVector measurement(Boolean group, Random r) {
 		float randFloat = r.nextFloat();
 		if(group == true) {
 			BraKetVector a = new BraKetVector('0');
@@ -242,8 +241,8 @@ public class BraKetVector{
 	}
 	
 	//group(偶数:01系測定, 奇数: +-系測定)測定
-	public BraKetVector measurement(int group) {
-		if(group%2 == 0) return measurement("01");
-		else return measurement("+-");
+	public BraKetVector measurement(int group, Random r) {
+		if(group%2 == 0) return measurement("01", r);
+		else return measurement("+-", r);
 	}
 };
